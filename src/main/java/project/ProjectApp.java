@@ -1,6 +1,7 @@
 package project;
 
 
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Scanner;
@@ -26,7 +27,8 @@ public class ProjectApp {
  //added a new list to create the menu
 	
 	private List<String> operations = List.of(
-			"1) Add project");
+			"1) Add project",
+			"2) List projects");
 	
 	
 	
@@ -62,6 +64,11 @@ public class ProjectApp {
 					createProject();
 					break;
 					
+				case 2:
+					listProjects();
+					break;
+					
+					
 				default:
 					System.out.println("\n" + selection + " is not a valid selection. Try again.");
 					break;
@@ -70,9 +77,20 @@ public class ProjectApp {
 				
 			}catch(Exception e) {
 				System.out.println("\nError: " + e );
+				
+				
 			}
 		}
 		
+	}
+
+
+
+	private void listProjects() {
+		List<Project> projects = projectService.fetchAllProjects(); 
+		System.out.println("\nProjects:");
+		projects.forEach(project -> System.out.println("  " + project.getProjectId() 
+		+ ": " + project.getProjectName()));
 	}
 
 

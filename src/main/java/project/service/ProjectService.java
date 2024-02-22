@@ -99,5 +99,10 @@ public class ProjectService {
 			
 		return projectDao.insertProject(project);
 	}
+
+	public List<Project> fetchAllProjects() {
+		projectDao.fetchAllProjects();
+		return null;
+	}
 }
 

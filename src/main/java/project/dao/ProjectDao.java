@@ -1,14 +1,16 @@
  package project.dao;
  
-
+import java.sql.*;
  
 import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.LinkedList;
 import java.util.List;
 
+import com.mysql.cj.protocol.Resultset;
 import com.mysql.cj.x.protobuf.MysqlxPrepare.Prepare;
 
 import project.entity.Project;
@@ -79,5 +81,36 @@ public class ProjectDao extends DaoBase {
 		}
 			
 		
+	}
+
+	public List<Project> fetchAllProjects() {
+		String sqlFecth = ""
+				+" SELECT * FROM "+ PROJECT_TABLE  + " ORDER BY project_name";
+		
+		try (Connection conn = DbConnection.getConnection()){
+			startTransaction(conn);
+			
+			try(PreparedStatement stmt = conn.prepareStatement(sqlFecth)){
+				
+				try(ResultSet rs = stmt.executeQuery()){
+					
+					List<Project> projects = new LinkedList<Project>();
+					
+					while (rs.next()) {
+						projects.add(extract(rs, Project.class));
+					}
+					
+					return projects;
+				}
+				
+			}catch(Exception e){
+				rollbackTransaction(conn);
+				throw new DbException(e);
+			}
+			
+		}catch(SQLException e) {
+			throw new DbException(e);
+			
+		}
 	}
 }
